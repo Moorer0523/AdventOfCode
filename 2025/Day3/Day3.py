@@ -1,6 +1,6 @@
 import os, math
 
-input = open(os.path.join(os.path.dirname(__file__), "InputTest"), "r")
+input = open(os.path.join(os.path.dirname(__file__), "Input"), "r")
 inputList = input.read().split()
 
 def findMaxPower(bank, limit):
@@ -41,41 +41,36 @@ def problemOne():
         outputSum += findMaxPower(i, 2)
     print(outputSum)
 
+#start day 2
+
 def findLargestVolt(bank):
     joltDict = {}
+    optimalDict = {}
     startingIndex = 0
+    currIndex = 0
+    protectedNumbers = 11
     maxJolt = ""
 
     #convert to dict
     for i in range(len(bank)):
         joltDict[i]=bank[i]
 
-    #find largest starting in range of possible options
-    for j in range(len(bank) - 11):
-        if joltDict[j] > joltDict[startingIndex]:
-            startingIndex = j
-
-    #remove numbers ahead of starting value:
-    for k in range(startingIndex):
-        joltDict.pop(k)
-
-    #trim to 12 numbers
-    for popValue in range(1,10):
-        for key in list(joltDict):
-            if len(joltDict) > 12 and int(joltDict[key]) == popValue:
-                joltDict.pop(key)
-        if len(joltDict) == 12:
-            break
-
-    #sort by value
-    sortedTup = sorted(joltDict.items(), key=lambda value: value[1], reverse=True)
-
+    #find largest number in range of possible options
+    while protectedNumbers > -1:
+        currIndex = startingIndex
+        for j in range(startingIndex, len(bank) - protectedNumbers):
+            if joltDict[j] > joltDict[currIndex]:
+                currIndex = j
+        optimalDict[currIndex] = joltDict[currIndex]
+        startingIndex = currIndex + 1
+        protectedNumbers -= 1
+        
     #reassamble into string
-    for index,value in sorted(sortedTup):
-        if len(maxJolt) < 12:
-            maxJolt += joltDict[index]
+    for key in optimalDict.keys():
+        maxJolt += optimalDict[key]
 
     #return cast as int
+    print(maxJolt)
     return int(maxJolt)
 
 def problemTwo():

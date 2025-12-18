@@ -14,30 +14,25 @@ def findMaxPower(bank, limit):
 
             #find first index of serch value
             index = bank[maxIndex:].find(search)
-            print("found", search, "at index:", index)
-            print("remaining string to search", bank[index+1:])
+
             #if search value isn't at end of list, place as max
             if index+1 < len(bank) and index != -1:
                 if max1 == 0:
                     max1 = search
                     maxIndex = index
-                    print("assigned", max1, "to max1. max2 value is", max2)
                     #check if max2 is populated and return
                     if max2 != 0:
                         break
                     #check if search value exists in remainder of string
                     elif bank[index+1:].find(search) > -1 and max2 == 0:
-                        print("found 2nd instance of", search)
                         max2 = search
                         break
                 else:
                     max2 = search
-                    print("assigned", max2, "to max2")
                     break
             #if value at end of str, set to 2nd max
             elif index+1 == len(bank):
                 max2 = search
-    print(f"found max of {max1}{max2}")
     return int(f"{max1}{max2}")
 
 def problemOne():
@@ -46,6 +41,48 @@ def problemOne():
         outputSum += findMaxPower(i, 2)
     print(outputSum)
 
+def findLargestVolt(bank):
+    joltDict = {}
+    startingIndex = 0
+    maxJolt = ""
 
+    #convert to dict
+    for i in range(len(bank)):
+        joltDict[i]=bank[i]
 
-problemOne()
+    #find largest starting in range of possible options
+    for j in range(len(bank) - 11):
+        if joltDict[j] > joltDict[startingIndex]:
+            startingIndex = j
+
+    #remove numbers ahead of starting value:
+    for k in range(startingIndex):
+        joltDict.pop(k)
+
+    #trim to 12 numbers
+    for popValue in range(1,10):
+        for key in list(joltDict):
+            if len(joltDict) > 12 and int(joltDict[key]) == popValue:
+                joltDict.pop(key)
+        if len(joltDict) == 12:
+            break
+
+    #sort by value
+    sortedTup = sorted(joltDict.items(), key=lambda value: value[1], reverse=True)
+
+    #reassamble into string
+    for index,value in sorted(sortedTup):
+        if len(maxJolt) < 12:
+            maxJolt += joltDict[index]
+
+    #return cast as int
+    return int(maxJolt)
+
+def problemTwo():
+    outputSum = 0
+    for val in inputList:
+        outputSum += findLargestVolt(val)
+    #print(outputSum)
+
+problemTwo()
+# problemOne()

@@ -82,7 +82,7 @@ def problemTwo():
     outputSum = 0
     for val in inputList:
         outputSum += findLargestVolt(val)
-    #print(outputSum)
+    print(outputSum)
 
 problemTwo()
 # problemOne()
